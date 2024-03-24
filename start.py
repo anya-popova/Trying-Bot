@@ -3,7 +3,6 @@ from telebot import custom_filters
 from telebot import StateMemoryStorage
 from telebot.handler_backends import StatesGroup, State
 
-
 state_storage = StateMemoryStorage()
 bot = telebot.TeleBot("",
                       state_storage=state_storage, parse_mode='Markdown')
@@ -58,6 +57,40 @@ menu_keyboard_stations.add(
     )
 )
 
+
+@bot.message_handler(state="*", commands=['start'])
+def start(message):
+    bot.send_message(
+        message.chat.id,
+        f'Привет, {message.from_user.first_name}!\nХорошего дня^^',  # приветствие, нужно менять
+    )
+
+
+@bot.message_handler(commands=['info'])
+def main(message):
+    bot.send_message(
+        message.chat.id,
+        'Информация о боте',  # Расписать информацию о боте
+    )
+
+
+@bot.message_handler(commands=['stations'])
+def main(message):
+    bot.send_message(
+        message.chat.id,
+        'Выберете станцию:',
+        reply_markup=menu_keyboard_stations)
+
+
+@bot.message_handler(commands=['scores'])
+def main(message):
+    bot.send_message(
+        message.chat.id,
+        'Текущие оценки:',  # Расписать + база данных
+    )
+
+
+# всё для изменения названия команды
 text_button_edit_data_yes = "Да, изменить название"
 text_button_edit_data_no = "Нет, не изменять название"
 
@@ -75,44 +108,12 @@ menu_keyboard_edit_data.add(
 )
 
 
-@bot.message_handler(state="*", commands=['start'])
-def start(message):
-    bot.send_message(
-        message.chat.id,
-        f'Привет, {message.from_user.first_name}!\nХорошего дня^^',  # приветствие
-        )
-
-
 @bot.message_handler(commands=['edit_data'])
 def main(message):
     bot.send_message(
         message.chat.id,
         'Изменить название команды?',
         reply_markup=menu_keyboard_edit_data)
-
-
-@bot.message_handler(commands=['info'])
-def main(message):
-    bot.send_message(
-        message.chat.id,
-        'Информация о боте',   # Расписать информацию о боте
-        )
-
-
-@bot.message_handler(commands=['stations'])
-def main(message):
-    bot.send_message(
-        message.chat.id,
-        'Выберете станцию:',
-        reply_markup=menu_keyboard_stations)
-
-
-@bot.message_handler(commands=['scores'])
-def main(message):
-    bot.send_message(
-        message.chat.id,
-        'Текущие оценки:',   # Расписать + база данных
-        )
 
 
 @bot.message_handler()
@@ -125,7 +126,7 @@ def info(message):
         if message.text.lower() in ['нет, не изменять название']:
             bot.send_message(
                 message.chat.id,
-                'отмена',  # хз, нужно будет поменять
+                'отмена',  # хз, нужно менять
             )
 
 
